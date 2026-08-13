@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-.env
-.env.local
+# NÃO ESQUECE DE DESCOMENTAR O .ENV DEPOIS QUE O PROJETO JA ESTIVER NO AR!!!!!!!!!!!!!!!!!!!!
+# .env
+# .env.local
