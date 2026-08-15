@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+
 import {
   MapContainer,
   TileLayer,
@@ -6,80 +7,108 @@ import {
   Popup,
 } from 'react-leaflet'
 
-import { supabase } from '../lib/supabase'
 import MapClickHandler from './MapClickHandler'
 import IncidentForm from './IncidentForm'
+import IncidentDetails from './IncidentDetails'
 
-function Map() {
-  const manaus = [-3.1019, -60.025]
+function Map({
+  incidents,
+  onIncidentCreated,
+}) {
+  const manaus = [
+    -3.1019,
+    -60.025,
+  ]
 
-  const [incidents, setIncidents] = useState([])
-  const [selectedLocation, setSelectedLocation] = useState(null)
+  const [
+    selectedLocation,
+    setSelectedLocation,
+  ] = useState(null)
 
-  async function carregarOcorrencias() {
-    const { data, error } = await supabase
-      .from('incidents')
-      .select(`
-        id,
-        title,
-        description,
-        latitude,
-        longitude,
-        status,
-        created_at,
-        categories (
-          name,
-          icon
-        )
-      `)
-      .eq('status', 'active')
+  const [
+    reporting,
+    setReporting,
+  ] = useState(false)
 
-    if (error) {
-      console.error(
-        'Erro ao carregar ocorrências:',
-        error
-      )
+  const [
+    selectedIncident,
+    setSelectedIncident,
+  ] = useState(null)
 
+  function handleMapClick(location) {
+    if (!reporting) {
       return
     }
 
-    setIncidents(data)
+    setSelectedLocation(location)
+
+    setReporting(false)
   }
 
-  useEffect(() => {
-    carregarOcorrencias()
-  }, [])
+  function iniciarRelato() {
+    setSelectedLocation(null)
 
-  function handleMapClick(location) {
-    setSelectedLocation(location)
+    setReporting(true)
   }
 
   function fecharFormulario() {
     setSelectedLocation(null)
+
+    setReporting(false)
   }
 
   async function handleIncidentCreated() {
-    await carregarOcorrencias()
+    if (onIncidentCreated) {
+      await onIncidentCreated()
+    }
   }
 
   return (
-    <>
+    <div className="map-container">
+
+      <button
+        onClick={iniciarRelato}
+        className="map-report-button"
+      >
+        + Relatar problema
+      </button>
+
+      {reporting && (
+        <div className="map-selection-message">
+          Clique no mapa para indicar o
+          local do problema.
+        </div>
+      )}
+
       <MapContainer
         center={manaus}
         zoom={12}
         style={{
-          height: '600px',
+          height: '620px',
           width: '100%',
         }}
       >
         <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
+          attribution="© OpenStreetMap"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         <MapClickHandler
           onMapClick={handleMapClick}
         />
+
+        {selectedLocation && (
+          <Marker
+            position={[
+              selectedLocation.latitude,
+              selectedLocation.longitude,
+            ]}
+          >
+            <Popup>
+              Local selecionado
+            </Popup>
+          </Marker>
+        )}
 
         {incidents.map((incident) => (
           <Marker
@@ -90,6 +119,7 @@ function Map() {
             ]}
           >
             <Popup>
+
               <strong>
                 {incident.categories?.icon}{' '}
                 {incident.categories?.name}
@@ -106,10 +136,19 @@ function Map() {
               {incident.description}
 
               <br />
+              <br />
 
-              <small>
-                Status: {incident.status}
-              </small>
+              <button
+                className="popup-button"
+                onClick={() =>
+                  setSelectedIncident(
+                    incident
+                  )
+                }
+              >
+                Ver detalhes
+              </button>
+
             </Popup>
           </Marker>
         ))}
@@ -119,10 +158,20 @@ function Map() {
         <IncidentForm
           location={selectedLocation}
           onClose={fecharFormulario}
-          onCreated={handleIncidentCreated}
+          onCreated={
+            handleIncidentCreated
+          }
         />
       )}
-    </>
+
+      <IncidentDetails
+        incident={selectedIncident}
+        onClose={() =>
+          setSelectedIncident(null)
+        }
+      />
+
+    </div>
   )
 }
 

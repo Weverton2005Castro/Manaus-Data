@@ -3,10 +3,13 @@ import { supabase } from '../lib/supabase'
 
 function IncidentForm({ location, onClose, onCreated }) {
   const [categories, setCategories] = useState([])
+
   const [categoryId, setCategoryId] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     async function carregarCategorias() {
@@ -16,7 +19,11 @@ function IncidentForm({ location, onClose, onCreated }) {
         .order('name')
 
       if (error) {
-        console.error('Erro ao carregar categorias:', error)
+        console.error(
+          'Erro ao carregar categorias:',
+          error
+        )
+
         return
       }
 
@@ -29,8 +36,14 @@ function IncidentForm({ location, onClose, onCreated }) {
   async function handleSubmit(event) {
     event.preventDefault()
 
+    setMessage(null)
+
     if (!categoryId || !title.trim()) {
-      alert('Preencha a categoria e o título.')
+      setMessage({
+        type: 'error',
+        text: 'Preencha a categoria e o título.',
+      })
+
       return
     }
 
@@ -52,15 +65,34 @@ function IncidentForm({ location, onClose, onCreated }) {
     setLoading(false)
 
     if (error) {
-      console.error('Erro ao criar ocorrência:', error)
-      alert('Não foi possível registrar a ocorrência.')
+      console.error(
+        'Erro ao criar ocorrência:',
+        error
+      )
+
+      setMessage({
+        type: 'error',
+        text: 'Não foi possível registrar a ocorrência.',
+      })
+
       return
     }
 
-    console.log('Ocorrência criada:', data)
+    console.log(
+      'Ocorrência criada:',
+      data
+    )
 
-    onCreated()
-    onClose()
+    setMessage({
+      type: 'success',
+      text: 'Ocorrência registrada com sucesso!',
+    })
+
+    await onCreated()
+
+    setTimeout(() => {
+      onClose()
+    }, 1200)
   }
 
   return (
@@ -70,10 +102,11 @@ function IncidentForm({ location, onClose, onCreated }) {
         top: 20,
         right: 20,
         width: 350,
-        background: 'white',
+        background: '#fff',
         padding: 20,
         borderRadius: 10,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+        boxShadow:
+          '0 4px 20px rgba(0,0,0,0.2)',
         zIndex: 1000,
       }}
     >
@@ -82,78 +115,133 @@ function IncidentForm({ location, onClose, onCreated }) {
       <p>
         Localização:
         <br />
+
         {location.latitude.toFixed(6)},
         {' '}
+
         {location.longitude.toFixed(6)}
       </p>
 
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Categoria</label>
+          <label>
+            Categoria
+          </label>
+
+          <br />
 
           <select
             value={categoryId}
             onChange={(event) =>
-              setCategoryId(event.target.value)
+              setCategoryId(
+                event.target.value
+              )
             }
+            disabled={loading}
           >
             <option value="">
               Selecione uma categoria
             </option>
 
-            {categories.map((category) => (
-              <option
-                key={category.id}
-                value={category.id}
-              >
-                {category.icon} {category.name}
-              </option>
-            ))}
+            {categories.map(
+              (category) => (
+                <option
+                  key={category.id}
+                  value={category.id}
+                >
+                  {category.icon}{' '}
+                  {category.name}
+                </option>
+              )
+            )}
           </select>
         </div>
 
         <br />
 
         <div>
-          <label>Título</label>
+          <label>
+            Título
+          </label>
+
+          <br />
 
           <input
             type="text"
             value={title}
             onChange={(event) =>
-              setTitle(event.target.value)
+              setTitle(
+                event.target.value
+              )
             }
             placeholder="Ex: Buraco na pista"
+            disabled={loading}
           />
         </div>
 
         <br />
 
         <div>
-          <label>Descrição</label>
+          <label>
+            Descrição
+          </label>
+
+          <br />
 
           <textarea
             value={description}
             onChange={(event) =>
-              setDescription(event.target.value)
+              setDescription(
+                event.target.value
+              )
             }
             placeholder="Descreva o problema..."
+            disabled={loading}
           />
         </div>
 
         <br />
 
+        {message && (
+          <div
+            style={{
+              padding: '10px',
+              marginBottom: '10px',
+              borderRadius: '6px',
+              background:
+                message.type === 'success'
+                  ? '#dcfce7'
+                  : '#fee2e2',
+              color:
+                message.type === 'success'
+                  ? '#166534'
+                  : '#991b1b',
+            }}
+          >
+            {message.type === 'success'
+              ? '✓ '
+              : '× '}
+
+            {message.text}
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={loading}
         >
-          {loading ? 'Enviando...' : 'Enviar ocorrência'}
+          {loading
+            ? 'Enviando...'
+            : 'Enviar ocorrência'}
         </button>
 
         <button
           type="button"
           onClick={onClose}
-          style={{ marginLeft: 10 }}
+          disabled={loading}
+          style={{
+            marginLeft: 10,
+          }}
         >
           Cancelar
         </button>

@@ -1,0 +1,97 @@
+.map-card {
+  overflow: hidden;
+}
+
+.map-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.map-wrapper .leaflet-container {
+  width: 100%;
+  height: 620px;
+
+  z-index: 1;
+}
+
+.map-wrapper .leaflet-control-container {
+  z-index: 500;
+}
+
+.map-wrapper .leaflet-popup-content {
+  margin: 14px 16px;
+}
+
+.map-wrapper .leaflet-popup-content strong {
+  color: var(--text);
+}
+
+.map-report-button {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  z-index: 1000;
+
+  border: none;
+  border-radius: 9px;
+
+  padding: 10px 15px;
+
+  background: var(--primary);
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.18);
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.map-report-button:hover {
+  background: var(--primary-dark);
+
+  transform: translateY(-1px);
+}
+
+.map-selection-message {
+  position: absolute;
+
+  top: 16px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 1000;
+
+  padding: 10px 16px;
+
+  border-radius: 9px;
+
+  background: white;
+
+  color: var(--text);
+
+  font-size: 13px;
+  font-weight: 500;
+
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 600px) {
+  .map-wrapper .leaflet-container {
+    height: 500px;
+  }
+
+  .map-report-button {
+    top: 12px;
+    right: 12px;
+  }
+}
