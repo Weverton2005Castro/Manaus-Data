@@ -24,5 +24,12 @@ dist-ssr
 *.sw?
 
 # NÃO ESQUECE DE DESCOMENTAR O .ENV DEPOIS QUE O PROJETO JA ESTIVER NO AR!!!!!!!!!!!!!!!!!!!!
-# .env
-# .env.local
+#.env
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+backend/.env
+backend/.env.*

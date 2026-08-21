@@ -6,33 +6,99 @@ function IncidentDetails({
     return null
   }
 
-  const data = new Date(
-    incident.created_at
-  ).toLocaleString('pt-BR')
+  const category =
+    incident.categories?.name ||
+    'Ocorrência'
+
+  const icon =
+    incident.categories?.icon || '📍'
+
+  const title =
+    incident.title ||
+    'Ocorrência sem título'
+
+  const description =
+    incident.description ||
+    'Nenhuma descrição informada.'
+
+  const latitude =
+    Number(incident.latitude)
+
+  const longitude =
+    Number(incident.longitude)
+
+  const status =
+    incident.status || 'active'
+
+  const statusConfig = {
+    active: {
+      label: 'Ativo',
+      className: 'active',
+    },
+
+    resolved: {
+      label: 'Resolvido',
+      className: 'resolved',
+    },
+
+    pending: {
+      label: 'Pendente',
+      className: 'pending',
+    },
+  }
+
+  const currentStatus =
+    statusConfig[status] ||
+    statusConfig.active
+
+  const data = incident.created_at
+    ? new Date(
+        incident.created_at
+      ).toLocaleString('pt-BR')
+    : 'Data não informada'
 
   return (
     <div className="incident-overlay">
 
-      <div className="incident-panel">
+      <div
+        className="incident-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Detalhes da ocorrência"
+      >
 
         <button
           className="incident-close"
           onClick={onClose}
+          aria-label="Fechar detalhes"
         >
-          ✕
+          ×
         </button>
 
         <div className="incident-category">
-          {incident.categories?.icon}{' '}
-          {incident.categories?.name}
+
+          <span>
+            {icon}
+          </span>
+
+          <span>
+            {category}
+          </span>
+
         </div>
 
         <h2 className="incident-title">
-          {incident.title}
+          {title}
         </h2>
 
-        <div className="incident-status active">
-          ● Ativo
+        <div
+          className={`incident-status ${currentStatus.className}`}
+        >
+          <span>
+            ●
+          </span>
+
+          {currentStatus.label}
         </div>
 
         <div className="incident-section">
@@ -42,8 +108,7 @@ function IncidentDetails({
           </h4>
 
           <p>
-            {incident.description ||
-              'Nenhuma descrição informada.'}
+            {description}
           </p>
 
         </div>
@@ -54,15 +119,33 @@ function IncidentDetails({
             Localização
           </h4>
 
-          <p>
-            Latitude:{' '}
-            {incident.latitude.toFixed(6)}
-          </p>
+          <div className="incident-location">
 
-          <p>
-            Longitude:{' '}
-            {incident.longitude.toFixed(6)}
-          </p>
+            <div>
+              <span>
+                Latitude
+              </span>
+
+              <strong>
+                {Number.isFinite(latitude)
+                  ? latitude.toFixed(6)
+                  : 'Não informada'}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                Longitude
+              </span>
+
+              <strong>
+                {Number.isFinite(longitude)
+                  ? longitude.toFixed(6)
+                  : 'Não informada'}
+              </strong>
+            </div>
+
+          </div>
 
         </div>
 
