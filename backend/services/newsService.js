@@ -1,4 +1,5 @@
 const NEWS_API_URL = 'https://newsdata.io/api/1/latest'
+const supabase = require('../config/supabase')
 
 async function buscarNoticias() {
   const params = new URLSearchParams({
@@ -26,7 +27,38 @@ async function buscarNoticias() {
     )
   }
 
+  await persistirNoticias(data.results || [])
+
   return data
+}
+
+async function persistirNoticias(articles) {
+  if (!articles || articles.length === 0) {
+    return
+  }
+
+  const noticiasNormalizadas = articles.map(article => ({
+    external_id: article.article_id || null,
+    title: article.title || null,
+    description: article.description || null,
+    url: article.link || null,
+    image_url: article.image_url || null,
+    source: article.source_name || null,
+    category: article.category || null,
+    published_at: article.pubDate || null,
+    language: article.language || null,
+    country: article.country || null
+  }))
+
+  const { error } = await supabase
+    .from('news')
+    .upsert(noticiasNormalizadas, {
+      onConflict: 'external_id'
+    })
+
+  if (error) {
+    console.error('Erro ao persistir notícias no Supabase:', error)
+  }
 }
 
 module.exports = {

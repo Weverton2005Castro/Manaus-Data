@@ -8,6 +8,7 @@ import Weather from './components/Weather'
 import Map from './components/Map'
 import CitySummary from './components/CitySummary'
 import IncidentFilters from './components/IncidentFilters'
+import News from './components/News'
 
 import { getWeather } from './services/weather'
 import {
@@ -19,6 +20,7 @@ import './styles/layout.css'
 import './styles/map.css'
 import './styles/weather.css'
 import './styles/filters.css'
+import './styles/news.css'
 
 function App() {
   const [
@@ -303,6 +305,8 @@ function App() {
             <Weather
               weather={weather}
             />
+
+            <News />
 
           </section>
 
