@@ -28,6 +28,6 @@ app.use('/api/news', newsRoutes)
 
 app.listen(PORT, () => {
   console.log(
-    `🚀 Manaus Data API rodando em http://localhost:${PORT}`
+    `🚀 Manaus Data API rodando na porta ${PORT}`
   )
 })
