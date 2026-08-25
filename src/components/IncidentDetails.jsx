@@ -1,3 +1,5 @@
+import { getIncidentIcon } from '../lib/incidentIcons'
+
 function IncidentDetails({
   incident,
   onClose,
@@ -10,8 +12,7 @@ function IncidentDetails({
     incident.categories?.name ||
     'Ocorrência'
 
-  const icon =
-    incident.categories?.icon || '📍'
+  const IconComponent = getIncidentIcon(incident.categories?.name)
 
   const title =
     incident.title ||
@@ -77,9 +78,7 @@ function IncidentDetails({
 
         <div className="incident-category">
 
-          <span>
-            {icon}
-          </span>
+          {IconComponent && <IconComponent size={24} />}
 
           <span>
             {category}

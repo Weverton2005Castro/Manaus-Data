@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { getIncidentIcon } from '../lib/incidentIcons'
 
 function IncidentForm({ location, onClose, onCreated }) {
   const [categories, setCategories] = useState([])
@@ -144,15 +145,17 @@ function IncidentForm({ location, onClose, onCreated }) {
             </option>
 
             {categories.map(
-              (category) => (
-                <option
-                  key={category.id}
-                  value={category.id}
-                >
-                  {category.icon}{' '}
-                  {category.name}
-                </option>
-              )
+              (category) => {
+                const IconComponent = getIncidentIcon(category.name)
+                return (
+                  <option
+                    key={category.id}
+                    value={category.id}
+                  >
+                    {category.name}
+                  </option>
+                )
+              }
             )}
           </select>
         </div>

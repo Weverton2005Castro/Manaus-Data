@@ -108,6 +108,11 @@
   color: var(--primary);
 }
 
+/* Estilos para ícones SVG nos filtros */
+.incident-filter svg {
+  flex-shrink: 0;
+}
+
 .map-header {
   display: flex;
   align-items: center;

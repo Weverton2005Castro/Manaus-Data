@@ -10,6 +10,7 @@ import {
 import MapClickHandler from './MapClickHandler'
 import IncidentForm from './IncidentForm'
 import IncidentDetails from './IncidentDetails'
+import { getIncidentIcon } from '../lib/incidentIcons'
 
 function Map({
   incidents,
@@ -110,48 +111,54 @@ function Map({
           </Marker>
         )}
 
-        {incidents.map((incident) => (
-          <Marker
-            key={incident.id}
-            position={[
-              incident.latitude,
-              incident.longitude,
-            ]}
-          >
-            <Popup>
+        {incidents.map((incident) => {
+          const IconComponent = getIncidentIcon(incident.categories?.name)
 
-              <strong>
-                {incident.categories?.icon}{' '}
-                {incident.categories?.name}
-              </strong>
+          return (
+            <Marker
+              key={incident.id}
+              position={[
+                incident.latitude,
+                incident.longitude,
+              ]}
+            >
+              <Popup>
 
-              <br />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {IconComponent && <IconComponent size={20} />}
+                  <strong>
+                    {incident.categories?.name}
+                  </strong>
+                </div>
 
-              <strong>
-                {incident.title}
-              </strong>
+                <br />
 
-              <br />
+                <strong>
+                  {incident.title}
+                </strong>
 
-              {incident.description}
+                <br />
 
-              <br />
-              <br />
+                {incident.description}
 
-              <button
-                className="popup-button"
-                onClick={() =>
-                  setSelectedIncident(
-                    incident
-                  )
-                }
-              >
-                Ver detalhes
-              </button>
+                <br />
+                <br />
 
-            </Popup>
-          </Marker>
-        ))}
+                <button
+                  className="popup-button"
+                  onClick={() =>
+                    setSelectedIncident(
+                      incident
+                    )
+                  }
+                >
+                  Ver detalhes
+                </button>
+
+              </Popup>
+            </Marker>
+          )
+        })}
       </MapContainer>
 
       {selectedLocation && (

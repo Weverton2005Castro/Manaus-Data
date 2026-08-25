@@ -26,6 +26,11 @@
   color: var(--text);
 }
 
+/* Estilos para ícones de incidentes no mapa */
+.map-wrapper .leaflet-popup-content svg {
+  vertical-align: middle;
+}
+
 .map-report-button {
   position: absolute;
 
@@ -203,6 +208,11 @@
   text-transform: uppercase;
 
   letter-spacing: 0.4px;
+}
+
+/* Estilos para ícones SVG na categoria do incidente */
+.incident-category svg {
+  flex-shrink: 0;
 }
 
 .incident-title {

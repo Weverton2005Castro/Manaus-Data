@@ -1,3 +1,5 @@
+import { getIncidentIcon } from '../lib/incidentIcons'
+
 function IncidentFilters({
   incidents,
   selectedCategory,
@@ -65,27 +67,31 @@ function IncidentFilters({
         </button>
 
         {Object.entries(categories).map(
-          ([category, count]) => (
-            <button
-              key={category}
-              className={
-                selectedCategory === category
-                  ? 'incident-filter active'
-                  : 'incident-filter'
-              }
-              onClick={() =>
-                onCategoryChange(category)
-              }
-            >
-              <span>
-                {category}
-              </span>
+          ([category, count]) => {
+            const IconComponent = getIncidentIcon(category)
+            return (
+              <button
+                key={category}
+                className={
+                  selectedCategory === category
+                    ? 'incident-filter active'
+                    : 'incident-filter'
+                }
+                onClick={() =>
+                  onCategoryChange(category)
+                }
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {IconComponent && <IconComponent size={16} />}
+                  {category}
+                </span>
 
-              <strong>
-                {count}
-              </strong>
-            </button>
-          )
+                <strong>
+                  {count}
+                </strong>
+              </button>
+            )
+          }
         )}
 
       </div>
