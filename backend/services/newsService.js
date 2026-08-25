@@ -4,7 +4,7 @@ const supabase = require('../config/supabase')
 async function buscarNoticias() {
   const params = new URLSearchParams({
     apikey: process.env.NEWSDATA_API_KEY,
-    q: 'Manaus OR Amazonas',
+    q: 'Manaus',
     country: 'br',
     language: 'pt'
   })
