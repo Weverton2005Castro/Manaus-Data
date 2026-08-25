@@ -31,6 +31,39 @@
   vertical-align: middle;
 }
 
+/* Estilos para marcadores customizados do mapa */
+.custom-incident-marker {
+  background: transparent;
+  border: none;
+}
+
+.incident-marker-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
+}
+
+.incident-marker-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.incident-marker-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
 .map-report-button {
   position: absolute;
 

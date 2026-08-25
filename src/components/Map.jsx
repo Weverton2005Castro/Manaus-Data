@@ -10,7 +10,7 @@ import {
 import MapClickHandler from './MapClickHandler'
 import IncidentForm from './IncidentForm'
 import IncidentDetails from './IncidentDetails'
-import { getIncidentIcon } from '../lib/incidentIcons'
+import { getIncidentIcon, getIncidentMarkerIcon } from '../lib/incidentIcons'
 
 function Map({
   incidents,
@@ -113,6 +113,7 @@ function Map({
 
         {incidents.map((incident) => {
           const IconComponent = getIncidentIcon(incident.categories?.name)
+          const markerIcon = getIncidentMarkerIcon(incident.categories?.name)
 
           return (
             <Marker
@@ -121,6 +122,7 @@ function Map({
                 incident.latitude,
                 incident.longitude,
               ]}
+              icon={markerIcon}
             >
               <Popup>
 
